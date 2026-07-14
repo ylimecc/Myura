@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visor Switch — Tu Switch en la pantalla de tu PC</title>
+<meta name="description" content="Visor Switch: mira y graba tu Nintendo Switch en tu PC con una capturadora USB. Sin OBS, sin configurar nada. Gratis y open source.">
+<link rel="icon" href="icon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0C12;
+    --surface:#12151D;
+    --surface-2:#181C27;
+    --border:#232936;
+    --text:#EAF0F7;
+    --muted:#93A0B4;
+    --blue:#0AB9E6;
+    --red:#FF3C28;
+    --blue-dim:rgba(10,185,230,.14);
+    --red-dim:rgba(255,60,40,.14);
+    --radius:14px;
+    --font-display:"Chakra Petch",system-ui,sans-serif;
+    --font-pixel:"Press Start 2P",monospace;
+    --font-body:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--blue);color:#03222c}
+
+  a{color:var(--blue)}
+  a:focus-visible,button:focus-visible,summary:focus-visible{
+    outline:2px solid var(--blue);outline-offset:3px;border-radius:4px;
+  }
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+
+  /* ---------- top bar ---------- */
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 0;
+  }
+  .brand{
+    font-family:var(--font-pixel);font-size:11px;letter-spacing:1px;
+    color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;
+  }
+  .brand .dot-l{width:10px;height:10px;border-radius:50%;background:var(--blue)}
+  .brand .dot-r{width:10px;height:10px;border-radius:50%;background:var(--red)}
+  .top-actions{display:flex;align-items:center;gap:10px}
+  .lang-btn,.gh-link{
+    font-family:var(--font-display);font-weight:600;font-size:14px;
+    color:var(--muted);background:none;border:1px solid var(--border);
+    border-radius:8px;padding:7px 14px;cursor:pointer;text-decoration:none;
+    transition:color .2s,border-color .2s;
+  }
+  .lang-btn:hover,.gh-link:hover{color:var(--text);border-color:var(--muted)}
+
+  /* ---------- hero ---------- */
+  .hero{padding:40px 0 72px;text-align:center}
+  .eyebrow{
+    font-family:var(--font-pixel);font-size:10px;color:var(--muted);
+    letter-spacing:2px;display:block;margin-bottom:28px;
+  }
+  .eyebrow .b{color:var(--blue)} .eyebrow .r{color:var(--red)}
+
+  /* the app window mock */
+  .visor{
+    max-width:720px;margin:0 auto;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:0 30px 80px -20px rgba(0,0,0,.7), 0 0 120px -30px rgba(10,185,230,.25);
+    overflow:hidden;
+    text-align:left;
+  }
+  .visor-titlebar{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 14px;background:var(--surface-2);
+    border-bottom:1px solid var(--border);
+    font-size:12px;color:var(--muted);font-family:var(--font-display);
+  }
+  .visor-titlebar .win-dots{display:flex;gap:6px;margin-left:auto}
+  .visor-titlebar .win-dots span{width:10px;height:10px;border-radius:50%;background:var(--border)}
+  .screen{
+    position:relative;aspect-ratio:16/9;
+    background:radial-gradient(120% 120% at 50% 20%, #101623 0%, #070910 70%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:18px;overflow:hidden;
+  }
+  .screen.on{animation:crt-on .55s cubic-bezier(.23,1,.32,1) both}
+  @keyframes crt-on{
+    0%{transform:scaleY(.006) scaleX(.7);filter:brightness(6)}
+    55%{transform:scaleY(1.02) scaleX(1);filter:brightness(1.6)}
+    100%{transform:scale(1);filter:brightness(1)}
+  }
+  /* scanlines */
+  .screen::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay;
+  }
+  .screen::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(90% 70% at 50% 50%, transparent 60%, rgba(0,0,0,.5) 100%);
+  }
+  .screen h1{
+    font-family:var(--font-pixel);font-size:clamp(18px,4.4vw,34px);
+    line-height:1.5;text-align:center;
+    color:var(--text);
+    text-shadow:0 0 18px rgba(10,185,230,.55), 0 0 4px rgba(10,185,230,.8);
+  }
+  .screen h1 .r{color:var(--red);text-shadow:0 0 18px rgba(255,60,40,.55),0 0 4px rgba(255,60,40,.8)}
+  .live{
+    display:flex;align-items:center;gap:8px;
+    font-family:var(--font-display);font-weight:600;font-size:12px;
+    letter-spacing:3px;color:var(--muted);
+  }
+  .live i{
+    width:8px;height:8px;border-radius:50%;background:var(--red);
+    box-shadow:0 0 10px var(--red);
+    animation:blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .visor-toolbar{
+    display:flex;align-items:center;gap:14px;
+    padding:10px 16px;background:var(--surface-2);
+    border-top:1px solid var(--border);
+    color:var(--muted);
+  }
+  .visor-toolbar svg{width:17px;height:17px;flex:none}
+  .visor-toolbar .sep{flex:1}
+  .visor-toolbar .vol{
+    width:70px;height:4px;border-radius:2px;background:var(--border);position:relative;
+  }
+  .visor-toolbar .vol::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:65%;
+    border-radius:2px;background:var(--blue);
+  }
+
+  .tagline{
+    max-width:560px;margin:36px auto 0;
+    font-size:19px;color:var(--muted);
+  }
+  .tagline strong{color:var(--text);font-weight:600}
+
+  /* ---------- download buttons: the joy-con pair ---------- */
+  .dl-pair{
+    display:flex;justify-content:center;gap:16px;margin-top:34px;flex-wrap:wrap;
+  }
+  .dl{
+    display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+    font-family:var(--font-display);text-decoration:none;
+    border-radius:var(--radius);padding:16px 26px;min-width:250px;
+    border:1px solid;transition:transform .18s ease,box-shadow .18s ease;
+  }
+  .dl:active{transform:scale(.97)}
+  .dl .t{font-weight:700;font-size:17px;display:flex;align-items:center;gap:9px}
+  .dl .t svg{width:18px;height:18px}
+  .dl .s{font-size:13px;opacity:.75;font-family:var(--font-body)}
+  .dl-blue{
+    color:#CDF3FD;background:var(--blue-dim);border-color:rgba(10,185,230,.45);
+  }
+  .dl-blue:hover{transform:translateY(-2px);box-shadow:0 8px 34px -6px rgba(10,185,230,.45)}
+  .dl-blue .t{color:var(--blue)}
+  .dl-red{
+    color:#FFD9D4;background:var(--red-dim);border-color:rgba(255,60,40,.45);
+  }
+  .dl-red:hover{transform:translateY(-2px);box-shadow:0 8px 34px -6px rgba(255,60,40,.45)}
+  .dl-red .t{color:var(--red)}
+  .meta-line{
+    margin-top:22px;font-size:13.5px;color:var(--muted);
+    display:flex;justify-content:center;gap:8px;flex-wrap:wrap;
+  }
+  .meta-line span::after{content:"·";margin-left:8px;color:var(--border)}
+  .meta-line span:last-child::after{content:""}
+
+  /* ---------- sections ---------- */
+  section{padding:64px 0;border-top:1px solid var(--border)}
+  .sec-label{
+    font-family:var(--font-pixel);font-size:10px;letter-spacing:2px;
+    color:var(--muted);display:block;margin-bottom:14px;
+  }
+  h2{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(24px,3.4vw,32px);line-height:1.25;margin-bottom:34px;
+  }
+
+  /* steps — a real sequence */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .step{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:26px 24px;
+  }
+  .step .n{
+    font-family:var(--font-pixel);font-size:13px;color:var(--blue);
+    display:block;margin-bottom:16px;
+  }
+  .step:nth-child(2) .n{color:var(--text)}
+  .step:nth-child(3) .n{color:var(--red)}
+  .step h3{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:8px}
+  .step p{font-size:15px;color:var(--muted)}
+
+  /* features */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:24px;
+    transition:border-color .2s;
+  }
+  .card:hover{border-color:#33405a}
+  .card svg{width:24px;height:24px;color:var(--blue);margin-bottom:14px}
+  .card:nth-child(even) svg{color:var(--red)}
+  .card h3{font-family:var(--font-display);font-size:17px;font-weight:600;margin-bottom:6px}
+  .card p{font-size:14.5px;color:var(--muted)}
+
+  /* hotkeys */
+  .keys{display:flex;gap:16px;flex-wrap:wrap}
+  .key-row{
+    display:flex;align-items:center;gap:14px;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:16px 22px;flex:1;min-width:240px;
+  }
+  kbd{
+    font-family:var(--font-display);font-size:13px;font-weight:600;
+    background:var(--surface-2);border:1px solid var(--border);
+    border-bottom-width:3px;border-radius:6px;padding:4px 9px;
+    color:var(--text);white-space:nowrap;
+  }
+  .key-row p{font-size:14.5px;color:var(--muted)}
+
+  /* faq */
+  details{
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);margin-bottom:12px;overflow:hidden;
+  }
+  summary{
+    font-family:var(--font-display);font-weight:600;font-size:16px;
+    padding:18px 22px;cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:20px;color:var(--muted);flex:none}
+  details[open] summary::after{content:"–"}
+  details .a{padding:0 22px 20px;color:var(--muted);font-size:15px}
+  details .a strong{color:var(--text)}
+  details .a code{
+    font-family:var(--font-display);background:var(--surface-2);
+    padding:1px 7px;border-radius:5px;font-size:13.5px;color:var(--text);
+  }
+
+  /* footer */
+  footer{
+    border-top:1px solid var(--border);padding:34px 0 46px;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    color:var(--muted);font-size:14px;
+  }
+  footer .f-brand{font-family:var(--font-pixel);font-size:9px;letter-spacing:1px}
+  footer nav{display:flex;gap:22px}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--text)}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:860px){
+    .steps,.grid{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:600px){
+    .steps,.grid{grid-template-columns:1fr}
+    .hero{padding-top:22px}
+    .visor-toolbar{gap:10px}
+    .visor-toolbar .vol{display:none}
+    .dl{width:100%;align-items:center}
+    .dl .s{text-align:center}
+    section{padding:48px 0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .screen.on{animation:none}
+    .live i{animation:none}
+    .dl,.dl:hover{transition:none;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <a class="brand" href="#"><span class="dot-l"></span>VISOR SWITCH<span class="dot-r"></span></a>
+    <div class="top-actions">
+      <a class="gh-link" href="https://github.com/ylimecc/VisorSwitch" rel="noopener">GitHub</a>
+      <button class="lang-btn" id="langBtn" aria-label="Switch language">EN</button>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <main class="hero">
+    <span class="eyebrow"><span class="b">PLAYER 1</span> · <span data-i18n="eyebrow">PARA WINDOWS · GRATIS</span> · <span class="r">READY</span></span>
+
+    <div class="visor" role="img" aria-label="Ventana de la aplicación Visor Switch mostrando la señal de una Nintendo Switch">
+      <div class="visor-titlebar">
+        Visor Switch
+        <div class="win-dots"><span></span><span></span><span></span></div>
+      </div>
+      <div class="screen" id="screen">
+        <h1>VISOR<br><span class="r">SWITCH</span></h1>
+        <div class="live"><i></i><span data-i18n="live">SEÑAL EN VIVO · 1080p 60fps</span></div>
+      </div>
+      <div class="visor-toolbar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 5c-5 0-9 4.5-9 7s4 7 9 7 9-4.5 9-7-4-7-9-7z"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4v6h6"/><path d="M3.5 15a9 9 0 1 0 2-9.4L1 10"/></svg>
+        <div class="sep"></div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+        <div class="vol"></div>
+      </div>
+    </div>
+
+    <p class="tagline" data-i18n="tagline">Tu Nintendo Switch en la pantalla de tu PC. Conecta tu capturadora USB, abre el visor y juega — <strong>sin OBS, sin configurar nada</strong>.</p>
+
+    <div class="dl-pair">
+      <a class="dl dl-blue" href="https://github.com/ylimecc/VisorSwitch/releases/download/v1.1.0/VisorSwitch-Setup-1.1.0.exe">
+        <span class="t">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span data-i18n="dl1">Descargar instalador</span>
+        </span>
+        <span class="s" data-i18n="dl1s">VisorSwitch-Setup-1.1.0.exe · 71 MB</span>
+      </a>
+      <a class="dl dl-red" href="https://github.com/ylimecc/VisorSwitch/releases/download/v1.1.0/VisorSwitch-Portable-1.1.0.exe">
+        <span class="t">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          <span data-i18n="dl2">Versión portable</span>
+        </span>
+        <span class="s" data-i18n="dl2s">Sin instalación · 71 MB</span>
+      </a>
+    </div>
+
+    <div class="meta-line">
+      <span>Windows 10/11</span>
+      <span data-i18n="meta1">Gratis</span>
+      <span>v1.1.0</span>
+      <span><a href="https://github.com/ylimecc/VisorSwitch/releases" rel="noopener" data-i18n="meta2">todas las versiones</a></span>
+    </div>
+  </main>
+
+  <!-- ================= STEPS ================= -->
+  <section id="como">
+    <span class="sec-label" data-i18n="s1label">START</span>
+    <h2 data-i18n="s1title">Listo en tres pasos</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <h3 data-i18n="st1t">Conecta</h3>
+        <p data-i18n="st1p">Del dock de la Switch, cable HDMI a tu capturadora USB, y la capturadora a tu PC.</p>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <h3 data-i18n="st2t">Abre el visor</h3>
+        <p data-i18n="st2p">Pulsa «Conectar capturadora». El visor detecta el video y el audio solo.</p>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <h3 data-i18n="st3t">Juega</h3>
+        <p data-i18n="st3p">1080p a 60 fps en tu monitor. Guarda replays, capturas y clips mientras juegas.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section id="funciones">
+    <span class="sec-label" data-i18n="s2label">ITEMS</span>
+    <h2 data-i18n="s2title">Todo lo que trae</h2>
+    <div class="grid">
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        <h3 data-i18n="f1t">Replay instantáneo</h3>
+        <p data-i18n="f1p">Guarda los últimos 30–60 segundos de juego con un botón. Ese golazo ya no se pierde.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        <h3 data-i18n="f2t">Captura y grabación</h3>
+        <p data-i18n="f2p">Screenshots y clips de video directo a tu carpeta de Descargas, o a la que tú elijas.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><rect x="12" y="12" width="8" height="6" rx="1"/></svg>
+        <h3 data-i18n="f3t">Modo mini (PiP)</h3>
+        <p data-i18n="f3p">Ventana flotante siempre visible: juega en una esquina mientras haces otra cosa.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
+        <h3 data-i18n="f4t">Siempre encima</h3>
+        <p data-i18n="f4p">Fija la ventana sobre cualquier aplicación con un clic.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
+        <h3 data-i18n="f5t">Filtro CRT</h3>
+        <p data-i18n="f5p">Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón Joy-Con.</p>
+      </div>
+      <div class="card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
+        <h3 data-i18n="f6t">Cero configuración</h3>
+        <p data-i18n="f6p">Sin escenas, sin fuentes, sin OBS. Detecta la capturadora y el audio automáticamente.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOTKEYS ================= -->
+  <section id="hotkeys">
+    <span class="sec-label" data-i18n="s3label">COMBOS</span>
+    <h2 data-i18n="s3title">Atajos globales — funcionan aunque estés en otra ventana</h2>
+    <div class="keys">
+      <div class="key-row"><kbd>Ctrl + Alt + R</kbd><p data-i18n="k1">Guardar replay de lo que acaba de pasar</p></div>
+      <div class="key-row"><kbd>Ctrl + Alt + C</kbd><p data-i18n="k2">Captura de pantalla</p></div>
+      <div class="key-row"><kbd>Ctrl + Alt + G</kbd><p data-i18n="k3">Grabar / detener clip</p></div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq">
+    <span class="sec-label">FAQ</span>
+    <h2 data-i18n="s4title">Preguntas frecuentes</h2>
+
+    <details>
+      <summary data-i18n="q1">Windows me muestra una advertencia al abrirlo, ¿es normal?</summary>
+      <div class="a" data-i18n-html="a1">Sí. El aviso de SmartScreen aparece porque el ejecutable no está firmado digitalmente (un certificado de firma cuesta cientos de dólares al año, y esta app es gratis). Pulsa <strong>«Más información» → «Ejecutar de todas formas»</strong>.</div>
+    </details>
+    <details>
+      <summary data-i18n="q2">¿Qué capturadora necesito?</summary>
+      <div class="a" data-i18n-html="a2">Cualquier capturadora USB HDMI genérica sirve. Está probado con capturadoras económicas de chip <code>MS2130</code> (como las Steren de ~$300 MXN) a 1080p 60 fps. Conéctala a un puerto USB 3.0 si tu PC tiene.</div>
+    </details>
+    <details>
+      <summary data-i18n="q3">¿Instalador o portable?</summary>
+      <div class="a" data-i18n-html="a3"><strong>Instalador</strong>: se instala normal, con acceso directo en el menú de inicio. <strong>Portable</strong>: un solo .exe que corre desde donde lo pongas (una USB, por ejemplo), sin instalar nada. Las dos versiones hacen exactamente lo mismo.</div>
+    </details>
+    <details>
+      <summary data-i18n="q4">¿Dónde se guardan mis capturas y clips?</summary>
+      <div class="a" data-i18n-html="a4">Por defecto en tu carpeta de <strong>Descargas</strong>. Puedes elegir otra carpeta en Ajustes → «Elegir carpeta de guardado».</div>
+    </details>
+    <details>
+      <summary data-i18n="q5">¿Tiene retraso (lag)?</summary>
+      <div class="a" data-i18n-html="a5">El retraso depende de la capturadora, no del visor. Con una MS2130 es de unas décimas de segundo: perfecto para jugar casual, RPGs o plataformas. Para juegos de pelea competitivos, juega mirando la TV y usa el visor para grabar.</div>
+    </details>
+  </section>
+
+  <footer>
+    <span class="f-brand">VISOR SWITCH · 2026</span>
+    <nav>
+      <a href="https://github.com/ylimecc/VisorSwitch/releases" rel="noopener" data-i18n="ft1">Todas las versiones</a>
+      <a href="https://github.com/ylimecc/VisorSwitch/issues" rel="noopener" data-i18n="ft3">Reportar un problema</a>
+    </nav>
+  </footer>
+</div>
+
+<script>
+/* ---------- i18n ---------- */
+const STRINGS = {
+  es: {
+    eyebrow:"PARA WINDOWS · GRATIS",
+    live:"SEÑAL EN VIVO · 1080p 60fps",
+    tagline:'Tu Nintendo Switch en la pantalla de tu PC. Conecta tu capturadora USB, abre el visor y juega — <strong>sin OBS, sin configurar nada</strong>.',
+    dl1:"Descargar instalador", dl1s:"VisorSwitch-Setup-1.1.0.exe · 71 MB",
+    dl2:"Versión portable", dl2s:"Sin instalación · 71 MB",
+    meta1:"Gratis", meta2:"todas las versiones",
+    s1label:"START", s1title:"Listo en tres pasos",
+    st1t:"Conecta", st1p:"Del dock de la Switch, cable HDMI a tu capturadora USB, y la capturadora a tu PC.",
+    st2t:"Abre el visor", st2p:"Pulsa «Conectar capturadora». El visor detecta el video y el audio solo.",
+    st3t:"Juega", st3p:"1080p a 60 fps en tu monitor. Guarda replays, capturas y clips mientras juegas.",
+    s2label:"ITEMS", s2title:"Todo lo que trae",
+    f1t:"Replay instantáneo", f1p:"Guarda los últimos 30–60 segundos de juego con un botón. Ese golazo ya no se pierde.",
+    f2t:"Captura y grabación", f2p:"Screenshots y clips de video directo a tu carpeta de Descargas, o a la que tú elijas.",
+    f3t:"Modo mini (PiP)", f3p:"Ventana flotante siempre visible: juega en una esquina mientras haces otra cosa.",
+    f4t:"Siempre encima", f4p:"Fija la ventana sobre cualquier aplicación con un clic.",
+    f5t:"Filtro CRT", f5p:"Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón Joy-Con.",
+    f6t:"Cero configuración", f6p:"Sin escenas, sin fuentes, sin OBS. Detecta la capturadora y el audio automáticamente.",
+    s3label:"COMBOS", s3title:"Atajos globales — funcionan aunque estés en otra ventana",
+    k1:"Guardar replay de lo que acaba de pasar", k2:"Captura de pantalla", k3:"Grabar / detener clip",
+    s4title:"Preguntas frecuentes",
+    q1:"Windows me muestra una advertencia al abrirlo, ¿es normal?",
+    a1:'Sí. El aviso de SmartScreen aparece porque el ejecutable no está firmado digitalmente (un certificado de firma cuesta cientos de dólares al año, y esta app es gratis). Pulsa <strong>«Más información» → «Ejecutar de todas formas»</strong>.',
+    q2:"¿Qué capturadora necesito?",
+    a2:'Cualquier capturadora USB HDMI genérica sirve. Está probado con capturadoras económicas de chip <code>MS2130</code> (como las Steren de ~$300 MXN) a 1080p 60 fps. Conéctala a un puerto USB 3.0 si tu PC tiene.',
+    q3:"¿Instalador o portable?",
+    a3:'<strong>Instalador</strong>: se instala normal, con acceso directo en el menú de inicio. <strong>Portable</strong>: un solo .exe que corre desde donde lo pongas (una USB, por ejemplo), sin instalar nada. Las dos versiones hacen exactamente lo mismo.',
+    q4:"¿Dónde se guardan mis capturas y clips?",
+    a4:'Por defecto en tu carpeta de <strong>Descargas</strong>. Puedes elegir otra carpeta en Ajustes → «Elegir carpeta de guardado».',
+    q5:"¿Tiene retraso (lag)?",
+    a5:'El retraso depende de la capturadora, no del visor. Con una MS2130 es de unas décimas de segundo: perfecto para jugar casual, RPGs o plataformas. Para juegos de pelea competitivos, juega mirando la TV y usa el visor para grabar.',
+    ft1:"Todas las versiones", ft3:"Reportar un problema",
+    title:"Visor Switch — Tu Switch en la pantalla de tu PC"
+  },
+  en: {
+    eyebrow:"FOR WINDOWS · FREE",
+    live:"LIVE SIGNAL · 1080p 60fps",
+    tagline:'Your Nintendo Switch on your PC screen. Plug in your USB capture card, open the viewer and play — <strong>no OBS, no setup</strong>.',
+    dl1:"Download installer", dl1s:"VisorSwitch-Setup-1.1.0.exe · 71 MB",
+    dl2:"Portable version", dl2s:"No install needed · 71 MB",
+    meta1:"Free", meta2:"all releases",
+    s1label:"START", s1title:"Ready in three steps",
+    st1t:"Plug in", st1p:"HDMI cable from the Switch dock to your USB capture card, and the card into your PC.",
+    st2t:"Open the viewer", st2p:"Hit “Connect capture card”. The viewer finds the video and audio by itself.",
+    st3t:"Play", st3p:"1080p at 60 fps on your monitor. Save replays, screenshots and clips while you play.",
+    s2label:"ITEMS", s2title:"Everything included",
+    f1t:"Instant replay", f1p:"Save the last 30–60 seconds of gameplay with one button. That epic moment is never lost again.",
+    f2t:"Screenshots & recording", f2p:"Screenshots and video clips straight to your Downloads folder, or any folder you pick.",
+    f3t:"Mini mode (PiP)", f3p:"Floating always-visible window: play in a corner while you do something else.",
+    f4t:"Always on top", f4p:"Pin the window above any application with one click.",
+    f5t:"CRT filter", f5p:"Retro TV scanlines to play like it's the 90s. Plus four color themes, including Joy-Con neon.",
+    f6t:"Zero setup", f6p:"No scenes, no sources, no OBS. Detects the capture card and its audio automatically.",
+    s3label:"COMBOS", s3title:"Global hotkeys — they work even when you're in another window",
+    k1:"Save a replay of what just happened", k2:"Take a screenshot", k3:"Start / stop recording",
+    s4title:"Frequently asked questions",
+    q1:"Windows shows a warning when I open it — is that normal?",
+    a1:'Yes. The SmartScreen warning appears because the executable is not code-signed (a signing certificate costs hundreds of dollars a year, and this app is free). Click <strong>“More info” → “Run anyway”</strong>.',
+    q2:"Which capture card do I need?",
+    a2:'Any generic USB HDMI capture card works. Tested with cheap <code>MS2130</code>-chip cards at 1080p 60 fps. Plug it into a USB 3.0 port if your PC has one.',
+    q3:"Installer or portable?",
+    a3:'<strong>Installer</strong>: installs normally, with a Start-menu shortcut. <strong>Portable</strong>: a single .exe that runs from anywhere (a USB stick, for example), nothing to install. Both versions do exactly the same.',
+    q4:"Where are my screenshots and clips saved?",
+    a4:'In your <strong>Downloads</strong> folder by default. You can pick another folder in Settings → “Choose save folder”.',
+    q5:"Is there any lag?",
+    a5:'Latency comes from the capture card, not the viewer. With an MS2130 it\'s a few tenths of a second: great for casual play, RPGs or platformers. For competitive fighting games, play on the TV and use the viewer to record.',
+    ft1:"All releases", ft3:"Report an issue",
+    title:"Visor Switch — Your Switch on your PC screen"
+  }
+};
+
+const langBtn = document.getElementById("langBtn");
+let lang = localStorage.getItem("vs-lang") || (navigator.language||"es").slice(0,2);
+if (lang !== "en") lang = "es";
+
+function apply(){
+  const t = STRINGS[lang];
+  document.documentElement.lang = lang;
+  document.title = t.title;
+  langBtn.textContent = lang === "es" ? "EN" : "ES";
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.getAttribute("data-i18n");
+    if (t[k] !== undefined) el.innerHTML = t[k];
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{
+    const k = el.getAttribute("data-i18n-html");
+    if (t[k] !== undefined) el.innerHTML = t[k];
+  });
+}
+langBtn.addEventListener("click", ()=>{
+  lang = lang === "es" ? "en" : "es";
+  localStorage.setItem("vs-lang", lang);
+  apply();
+});
+apply();
+
+/* ---------- CRT power-on ---------- */
+window.addEventListener("load", ()=>{
+  document.getElementById("screen").classList.add("on");
+});
+</script>
+</body>
+</html>

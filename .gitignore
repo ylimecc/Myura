@@ -1,0 +1,14 @@
+node_modules/
+dist/
+tools/
+*.log
+Thumbs.db
+Desktop.ini
+
+# fuente local - no se publica
+main.js
+preload.js
+visor.html
+package.json
+package-lock.json
+build/
