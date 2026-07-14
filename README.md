@@ -1,17 +1,21 @@
-# Visor Switch
+# QuantumJoy
 
-**🇪🇸** Tu Nintendo Switch en la pantalla de tu PC. Conecta tu capturadora USB HDMI, abre el visor y juega — sin OBS, sin configurar nada.
+**🇬🇧** A high-performance, low-latency capture card viewer for PC.
 
-**🇬🇧** Your Nintendo Switch on your PC screen. Plug in your USB HDMI capture card, open the viewer and play — no OBS, no setup.
+QuantumJoy is a lightweight application designed to let you play your favorite consoles (like Nintendo Switch, PlayStation, or Xbox) directly on your PC monitor through any standard USB capture card. Designed with minimalism and gaming-grade response times in mind.
+
+**🇪🇸** Visor de capturadora de alto rendimiento y baja latencia para PC.
+
+QuantumJoy es una aplicación ligera diseñada para jugar tus consolas favoritas (como Nintendo Switch, PlayStation o Xbox) directamente en el monitor de tu PC a través de cualquier capturadora USB estándar. Diseñada con minimalismo y tiempos de respuesta de nivel gaming.
 
 ## ⬇ Descargar / Download
 
-**[ylimecc.github.io/VisorSwitch](https://ylimecc.github.io/VisorSwitch/)** · [Releases](https://github.com/ylimecc/VisorSwitch/releases)
+**[ylimecc.github.io/QuantumJoy](https://ylimecc.github.io/QuantumJoy/)** · [Releases](https://github.com/ylimecc/QuantumJoy/releases)
 
 | | |
 |---|---|
-| `VisorSwitch-Setup-*.exe` | Instalador / Installer |
-| `VisorSwitch-Portable-*.exe` | Portable, sin instalación / no install |
+| `QuantumJoy-Setup-*.exe` | Instalador / Installer |
+| `QuantumJoy-Portable-*.exe` | Portable, sin instalación / no install |
 
 ## Requisitos / Requirements
 
@@ -27,3 +31,5 @@ If Windows SmartScreen shows a warning: **More info → Run anyway**. It appears
 ---
 
 © 2026 Dr. RE · Gratis para uso personal / Free for personal use
+
+*QuantumJoy is not affiliated with, endorsed by, or sponsored by Nintendo, Sony Interactive Entertainment, or Microsoft. All console names are trademarks of their respective owners and are mentioned solely to indicate compatibility.*

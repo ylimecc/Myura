@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Visor Switch — Tu Switch en la pantalla de tu PC</title>
-<meta name="description" content="Visor Switch: mira y graba tu Nintendo Switch en tu PC con una capturadora USB. Sin OBS, sin configurar nada. Gratis y open source.">
+<title>QuantumJoy — Visor de capturadora para PC</title>
+<meta name="description" content="QuantumJoy: visor de capturadora de alto rendimiento y baja latencia. Juega tus consolas en el monitor de tu PC con cualquier capturadora USB. Sin OBS, sin configurar nada. Gratis.">
 <link rel="icon" href="icon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,6 +265,7 @@
     color:var(--muted);font-size:14px;
   }
   footer .f-brand{font-family:var(--font-pixel);font-size:9px;letter-spacing:1px}
+  footer .legal{flex-basis:100%;font-size:12.5px;color:var(--muted);opacity:.75;margin-top:4px}
   footer nav{display:flex;gap:22px}
   footer a{color:var(--muted);text-decoration:none}
   footer a:hover{color:var(--text)}
@@ -294,9 +295,9 @@
 
 <div class="wrap">
   <header>
-    <a class="brand" href="#"><span class="dot-l"></span>VISOR SWITCH<span class="dot-r"></span></a>
+    <a class="brand" href="#"><span class="dot-l"></span>QUANTUMJOY<span class="dot-r"></span></a>
     <div class="top-actions">
-      <a class="gh-link" href="https://github.com/ylimecc/VisorSwitch" rel="noopener">GitHub</a>
+      <a class="gh-link" href="https://github.com/ylimecc/QuantumJoy" rel="noopener">GitHub</a>
       <button class="lang-btn" id="langBtn" aria-label="Switch language">EN</button>
     </div>
   </header>
@@ -305,13 +306,13 @@
   <main class="hero">
     <span class="eyebrow"><span class="b">PLAYER 1</span> · <span data-i18n="eyebrow">PARA WINDOWS · GRATIS</span> · <span class="r">READY</span></span>
 
-    <div class="visor" role="img" aria-label="Ventana de la aplicación Visor Switch mostrando la señal de una Nintendo Switch">
+    <div class="visor" role="img" aria-label="Ventana de la aplicación QuantumJoy mostrando la señal de una consola">
       <div class="visor-titlebar">
-        Visor Switch
+        QuantumJoy
         <div class="win-dots"><span></span><span></span><span></span></div>
       </div>
       <div class="screen" id="screen">
-        <h1>VISOR<br><span class="r">SWITCH</span></h1>
+        <h1>QUANTUM<br><span class="r">JOY</span></h1>
         <div class="live"><i></i><span data-i18n="live">SEÑAL EN VIVO · 1080p 60fps</span></div>
       </div>
       <div class="visor-toolbar" aria-hidden="true">
@@ -324,17 +325,17 @@
       </div>
     </div>
 
-    <p class="tagline" data-i18n="tagline">Tu Nintendo Switch en la pantalla de tu PC. Conecta tu capturadora USB, abre el visor y juega — <strong>sin OBS, sin configurar nada</strong>.</p>
+    <p class="tagline" data-i18n="tagline">Visor de capturadora <strong>de alto rendimiento y baja latencia</strong> para PC. Juega tus consolas favoritas — Nintendo Switch, PlayStation o Xbox — directamente en tu monitor con cualquier capturadora USB estándar. Minimalista, <strong>sin OBS, sin configurar nada</strong>.</p>
 
     <div class="dl-pair">
-      <a class="dl dl-blue" href="https://github.com/ylimecc/VisorSwitch/releases/download/v1.1.0/VisorSwitch-Setup-1.1.0.exe">
+      <a class="dl dl-blue" href="https://github.com/ylimecc/QuantumJoy/releases/download/v1.2.0/QuantumJoy-Setup-1.2.0.exe">
         <span class="t">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           <span data-i18n="dl1">Descargar instalador</span>
         </span>
-        <span class="s" data-i18n="dl1s">VisorSwitch-Setup-1.1.0.exe · 71 MB</span>
+        <span class="s" data-i18n="dl1s">QuantumJoy-Setup-1.2.0.exe · 71 MB</span>
       </a>
-      <a class="dl dl-red" href="https://github.com/ylimecc/VisorSwitch/releases/download/v1.1.0/VisorSwitch-Portable-1.1.0.exe">
+      <a class="dl dl-red" href="https://github.com/ylimecc/QuantumJoy/releases/download/v1.2.0/QuantumJoy-Portable-1.2.0.exe">
         <span class="t">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           <span data-i18n="dl2">Versión portable</span>
@@ -346,8 +347,8 @@
     <div class="meta-line">
       <span>Windows 10/11</span>
       <span data-i18n="meta1">Gratis</span>
-      <span>v1.1.0</span>
-      <span><a href="https://github.com/ylimecc/VisorSwitch/releases" rel="noopener" data-i18n="meta2">todas las versiones</a></span>
+      <span>v1.2.0</span>
+      <span><a href="https://github.com/ylimecc/QuantumJoy/releases" rel="noopener" data-i18n="meta2">todas las versiones</a></span>
     </div>
   </main>
 
@@ -359,7 +360,7 @@
       <div class="step">
         <span class="n">1</span>
         <h3 data-i18n="st1t">Conecta</h3>
-        <p data-i18n="st1p">Del dock de la Switch, cable HDMI a tu capturadora USB, y la capturadora a tu PC.</p>
+        <p data-i18n="st1p">De tu consola, cable HDMI a la capturadora USB, y la capturadora a tu PC.</p>
       </div>
       <div class="step">
         <span class="n">2</span>
@@ -402,7 +403,7 @@
       <div class="card">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>
         <h3 data-i18n="f5t">Filtro CRT</h3>
-        <p data-i18n="f5p">Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón Joy-Con.</p>
+        <p data-i18n="f5p">Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón azul/rojo.</p>
       </div>
       <div class="card">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/></svg>
@@ -451,11 +452,12 @@
   </section>
 
   <footer>
-    <span class="f-brand">VISOR SWITCH · 2026</span>
+    <span class="f-brand">QUANTUMJOY · 2026</span>
     <nav>
-      <a href="https://github.com/ylimecc/VisorSwitch/releases" rel="noopener" data-i18n="ft1">Todas las versiones</a>
-      <a href="https://github.com/ylimecc/VisorSwitch/issues" rel="noopener" data-i18n="ft3">Reportar un problema</a>
+      <a href="https://github.com/ylimecc/QuantumJoy/releases" rel="noopener" data-i18n="ft1">Todas las versiones</a>
+      <a href="https://github.com/ylimecc/QuantumJoy/issues" rel="noopener" data-i18n="ft3">Reportar un problema</a>
     </nav>
+    <p class="legal" data-i18n="legal">QuantumJoy no está afiliado a Nintendo, Sony ni Microsoft. Los nombres de consolas son marcas de sus respectivos titulares y se mencionan únicamente para indicar compatibilidad.</p>
   </footer>
 </div>
 
@@ -465,12 +467,12 @@ const STRINGS = {
   es: {
     eyebrow:"PARA WINDOWS · GRATIS",
     live:"SEÑAL EN VIVO · 1080p 60fps",
-    tagline:'Tu Nintendo Switch en la pantalla de tu PC. Conecta tu capturadora USB, abre el visor y juega — <strong>sin OBS, sin configurar nada</strong>.',
-    dl1:"Descargar instalador", dl1s:"VisorSwitch-Setup-1.1.0.exe · 71 MB",
+    tagline:'Visor de capturadora <strong>de alto rendimiento y baja latencia</strong> para PC. Juega tus consolas favoritas — Nintendo Switch, PlayStation o Xbox — directamente en tu monitor con cualquier capturadora USB estándar. Minimalista, <strong>sin OBS, sin configurar nada</strong>.',
+    dl1:"Descargar instalador", dl1s:"QuantumJoy-Setup-1.2.0.exe · 71 MB",
     dl2:"Versión portable", dl2s:"Sin instalación · 71 MB",
     meta1:"Gratis", meta2:"todas las versiones",
     s1label:"START", s1title:"Listo en tres pasos",
-    st1t:"Conecta", st1p:"Del dock de la Switch, cable HDMI a tu capturadora USB, y la capturadora a tu PC.",
+    st1t:"Conecta", st1p:"De tu consola, cable HDMI a la capturadora USB, y la capturadora a tu PC.",
     st2t:"Abre el visor", st2p:"Pulsa «Conectar capturadora». El visor detecta el video y el audio solo.",
     st3t:"Juega", st3p:"1080p a 60 fps en tu monitor. Guarda replays, capturas y clips mientras juegas.",
     s2label:"ITEMS", s2title:"Todo lo que trae",
@@ -478,7 +480,7 @@ const STRINGS = {
     f2t:"Captura y grabación", f2p:"Screenshots y clips de video directo a tu carpeta de Descargas, o a la que tú elijas.",
     f3t:"Modo mini (PiP)", f3p:"Ventana flotante siempre visible: juega en una esquina mientras haces otra cosa.",
     f4t:"Siempre encima", f4p:"Fija la ventana sobre cualquier aplicación con un clic.",
-    f5t:"Filtro CRT", f5p:"Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón Joy-Con.",
+    f5t:"Filtro CRT", f5p:"Scanlines de tele retro para jugar como en los 90. Y cuatro temas de color, incluido el neón azul/rojo.",
     f6t:"Cero configuración", f6p:"Sin escenas, sin fuentes, sin OBS. Detecta la capturadora y el audio automáticamente.",
     s3label:"COMBOS", s3title:"Atajos globales — funcionan aunque estés en otra ventana",
     k1:"Guardar replay de lo que acaba de pasar", k2:"Captura de pantalla", k3:"Grabar / detener clip",
@@ -494,17 +496,18 @@ const STRINGS = {
     q5:"¿Tiene retraso (lag)?",
     a5:'El retraso depende de la capturadora, no del visor. Con una MS2130 es de unas décimas de segundo: perfecto para jugar casual, RPGs o plataformas. Para juegos de pelea competitivos, juega mirando la TV y usa el visor para grabar.',
     ft1:"Todas las versiones", ft3:"Reportar un problema",
-    title:"Visor Switch — Tu Switch en la pantalla de tu PC"
+    legal:"QuantumJoy no está afiliado a Nintendo, Sony ni Microsoft. Los nombres de consolas son marcas de sus respectivos titulares y se mencionan únicamente para indicar compatibilidad.",
+    title:"QuantumJoy — Visor de capturadora para PC"
   },
   en: {
     eyebrow:"FOR WINDOWS · FREE",
     live:"LIVE SIGNAL · 1080p 60fps",
-    tagline:'Your Nintendo Switch on your PC screen. Plug in your USB capture card, open the viewer and play — <strong>no OBS, no setup</strong>.',
-    dl1:"Download installer", dl1s:"VisorSwitch-Setup-1.1.0.exe · 71 MB",
+    tagline:'A <strong>high-performance, low-latency</strong> capture card viewer for PC. Play your favorite consoles — Nintendo Switch, PlayStation or Xbox — right on your monitor through any standard USB capture card. Minimal by design, <strong>no OBS, no setup</strong>.',
+    dl1:"Download installer", dl1s:"QuantumJoy-Setup-1.2.0.exe · 71 MB",
     dl2:"Portable version", dl2s:"No install needed · 71 MB",
     meta1:"Free", meta2:"all releases",
     s1label:"START", s1title:"Ready in three steps",
-    st1t:"Plug in", st1p:"HDMI cable from the Switch dock to your USB capture card, and the card into your PC.",
+    st1t:"Plug in", st1p:"HDMI cable from your console to the USB capture card, and the card into your PC.",
     st2t:"Open the viewer", st2p:"Hit “Connect capture card”. The viewer finds the video and audio by itself.",
     st3t:"Play", st3p:"1080p at 60 fps on your monitor. Save replays, screenshots and clips while you play.",
     s2label:"ITEMS", s2title:"Everything included",
@@ -512,7 +515,7 @@ const STRINGS = {
     f2t:"Screenshots & recording", f2p:"Screenshots and video clips straight to your Downloads folder, or any folder you pick.",
     f3t:"Mini mode (PiP)", f3p:"Floating always-visible window: play in a corner while you do something else.",
     f4t:"Always on top", f4p:"Pin the window above any application with one click.",
-    f5t:"CRT filter", f5p:"Retro TV scanlines to play like it's the 90s. Plus four color themes, including Joy-Con neon.",
+    f5t:"CRT filter", f5p:"Retro TV scanlines to play like it's the 90s. Plus four color themes, including blue/red neon.",
     f6t:"Zero setup", f6p:"No scenes, no sources, no OBS. Detects the capture card and its audio automatically.",
     s3label:"COMBOS", s3title:"Global hotkeys — they work even when you're in another window",
     k1:"Save a replay of what just happened", k2:"Take a screenshot", k3:"Start / stop recording",
@@ -528,7 +531,8 @@ const STRINGS = {
     q5:"Is there any lag?",
     a5:'Latency comes from the capture card, not the viewer. With an MS2130 it\'s a few tenths of a second: great for casual play, RPGs or platformers. For competitive fighting games, play on the TV and use the viewer to record.',
     ft1:"All releases", ft3:"Report an issue",
-    title:"Visor Switch — Your Switch on your PC screen"
+    legal:"QuantumJoy is not affiliated with Nintendo, Sony or Microsoft. Console names are trademarks of their respective owners and are mentioned solely to indicate compatibility.",
+    title:"QuantumJoy — Capture card viewer for PC"
   }
 };
 
