@@ -1,21 +1,21 @@
-# QuantumJoy
+# Myura
 
 **🇬🇧** A high-performance, low-latency capture card viewer for PC.
 
-QuantumJoy is a lightweight application designed to let you play your favorite consoles (like Nintendo Switch, PlayStation, or Xbox) directly on your PC monitor through any standard USB capture card. Designed with minimalism and gaming-grade response times in mind.
+Myura is a lightweight application designed to let you play your favorite consoles (like Nintendo Switch, PlayStation, or Xbox) directly on your PC monitor through any standard USB capture card. Designed with minimalism and gaming-grade response times in mind.
 
 **🇪🇸** Visor de capturadora de alto rendimiento y baja latencia para PC.
 
-QuantumJoy es una aplicación ligera diseñada para jugar tus consolas favoritas (como Nintendo Switch, PlayStation o Xbox) directamente en el monitor de tu PC a través de cualquier capturadora USB estándar. Diseñada con minimalismo y tiempos de respuesta de nivel gaming.
+Myura es una aplicación ligera diseñada para jugar tus consolas favoritas (como Nintendo Switch, PlayStation o Xbox) directamente en el monitor de tu PC a través de cualquier capturadora USB estándar. Diseñada con minimalismo y tiempos de respuesta de nivel gaming.
 
 ## ⬇ Descargar / Download
 
-**[ylimecc.github.io/QuantumJoy](https://ylimecc.github.io/QuantumJoy/)** · [Releases](https://github.com/ylimecc/QuantumJoy/releases)
+**[ylimecc.github.io/Myura](https://ylimecc.github.io/Myura/)** · [Releases](https://github.com/ylimecc/Myura/releases)
 
 | | |
 |---|---|
-| `QuantumJoy-Setup-*.exe` | Instalador / Installer |
-| `QuantumJoy-Portable-*.exe` | Portable, sin instalación / no install |
+| `Myura-Setup-*.exe` | Instalador / Installer |
+| `Myura-Portable-*.exe` | Portable, sin instalación / no install |
 
 ## Requisitos / Requirements
 
@@ -32,4 +32,4 @@ If Windows SmartScreen shows a warning: **More info → Run anyway**. It appears
 
 © 2026 Dr. RE · Gratis para uso personal / Free for personal use
 
-*QuantumJoy is not affiliated with, endorsed by, or sponsored by Nintendo, Sony Interactive Entertainment, or Microsoft. All console names are trademarks of their respective owners and are mentioned solely to indicate compatibility.*
+*Myura is not affiliated with, endorsed by, or sponsored by Nintendo, Sony Interactive Entertainment, or Microsoft. All console names are trademarks of their respective owners and are mentioned solely to indicate compatibility.*
